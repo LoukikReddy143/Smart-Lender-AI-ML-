@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="result-section-container">
+    <div class="glass-card result-card">
+        <!-- Header status alert -->
+        <div class="result-header">
+            {% if result.status == 'Approved' %}
+                <div class="status-icon success-glow animate-pulse">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <h2 class="status-title text-success">Application Approved</h2>
+                <p class="status-subtitle">The applicant meets the creditworthiness criteria and is recommended for credit issuance.</p>
+            {% elif result.status == 'Flagged / Manual Review Required' %}
+                <div class="status-icon warning-glow animate-pulse">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h2 class="status-title text-warning">Manual Review Required</h2>
+                <p class="status-subtitle">The ML model predicted approval, but the application triggered high-risk policies.</p>
+            {% else %}
+                <div class="status-icon danger-glow animate-pulse">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <h2 class="status-title text-danger">Application Rejected</h2>
+                <p class="status-subtitle">The applicant does not meet standard creditworthiness criteria.</p>
+            {% endif %}
+        </div>
+
+        <div class="result-metrics">
+            <div class="metric-item">
+                <span class="metric-label">Model Confidence</span>
+                <span class="metric-value">{{ result.confidence }}</span>
+            </div>
+            <div class="metric-item">
+                <span class="metric-label">Classifier Used</span>
+                <span class="metric-value">XGBoost ML v1.0</span>
+            </div>
+        </div>
+
+        <!-- Risk Flag / Reasons Area -->
+        {% if result.is_high_risk %}
+            <div class="risk-reasons-card">
+                <div class="risk-card-header">
+                    <i class="fa-solid fa-triangle-exclamation text-warning"></i>
+                    <span>High-Risk Policy Violations</span>
+                </div>
+                <ul class="reasons-list">
+                    {% for reason in result.risk_reasons %}
+                        <li><i class="fa-solid fa-triangle-exclamation"></i> {{ reason }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <div class="risk-reasons-card risk-clean-card">
+                <div class="risk-card-header">
+                    <i class="fa-solid fa-shield-halved text-success"></i>
+                    <span>Risk Profile: Low-Risk</span>
+                </div>
+                <p>No critical system policies or high-risk thresholds were violated. The application is eligible for automated fast-track workflows.</p>
+            </div>
+        {% endif %}
+
+        <!-- Submitted Inputs Verification Table -->
+        <div class="input-verification-container">
+            <h3>Submitted Parameters Verification</h3>
+            <div class="verification-grid">
+                {% for key, val in result.inputs.items() %}
+                    <div class="verification-item">
+                        <span class="field-name">{{ key | replace('_', ' ') }}</span>
+                        <span class="field-value">{{ val }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="result-actions">
+            <a href="{{ url_for('predict') }}" class="btn btn-secondary"><i class="fa-solid fa-rotate-left"></i> Run Another Evaluation</a>
+            <a href="{{ url_for('home') }}" class="btn btn-primary"><i class="fa-solid fa-house-chimney"></i> Return Home</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

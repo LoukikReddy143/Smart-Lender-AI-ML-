@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="form-section-container">
+    <div class="glass-card form-card">
+        <div class="form-header">
+            <h2><i class="fa-solid fa-file-invoice-dollar text-gradient"></i> Credit Evaluation Form</h2>
+            <p>Input applicant demographics and financial information to evaluate creditworthiness instantly.</p>
+        </div>
+
+        <!-- Quick Fill Presets for Scenario Verification -->
+        <div class="presets-container">
+            <span class="preset-label"><i class="fa-solid fa-magic"></i> Scenario Presets:</span>
+            <div class="presets-buttons">
+                <button type="button" class="btn btn-sm btn-preset" onclick="fillPreset('low_risk')">
+                    <i class="fa-solid fa-user-check text-success"></i> Low-Risk Applicant
+                </button>
+                <button type="button" class="btn btn-sm btn-preset" onclick="fillPreset('high_risk')">
+                    <i class="fa-solid fa-user-shield text-danger"></i> High-Risk Applicant
+                </button>
+                <button type="button" class="btn btn-sm btn-preset" onclick="fillPreset('high_loan')">
+                    <i class="fa-solid fa-triangle-exclamation text-warning"></i> High-Value Loan Request
+                </button>
+            </div>
+        </div>
+
+        <form action="{{ url_for('predict') }}" method="POST" id="loanForm" class="loan-form">
+            <!-- Section 1: Demographics -->
+            <div class="form-fieldset">
+                <legend><i class="fa-solid fa-id-card"></i> Applicant Demographics</legend>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="Gender">Gender</label>
+                        <select name="Gender" id="Gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Married">Marital Status</label>
+                        <select name="Married" id="Married" required>
+                            <option value="" disabled selected>Select Status</option>
+                            <option value="Yes">Married</option>
+                            <option value="No">Single / Unmarried</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Dependents">Dependents</label>
+                        <select name="Dependents" id="Dependents" required>
+                            <option value="" disabled selected>Number of Dependents</option>
+                            <option value="0">0 Dependents</option>
+                            <option value="1">1 Dependent</option>
+                            <option value="2">2 Dependents</option>
+                            <option value="3+">3 or More Dependents</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Education">Education</label>
+                        <select name="Education" id="Education" required>
+                            <option value="" disabled selected>Select Education</option>
+                            <option value="Graduate">Graduate</option>
+                            <option value="Not Graduate">Not Graduate</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Employment & Income -->
+            <div class="form-fieldset">
+                <legend><i class="fa-solid fa-wallet"></i> Financial & Professional Profile</legend>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="Self_Employed">Employment Status</label>
+                        <select name="Self_Employed" id="Self_Employed" required>
+                            <option value="" disabled selected>Select Employment</option>
+                            <option value="No">Salaried Employee</option>
+                            <option value="Yes">Self-Employed</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ApplicantIncome">Applicant Monthly Income ($)</label>
+                        <input type="number" name="ApplicantIncome" id="ApplicantIncome" min="0" placeholder="e.g. 5000" required>
+                        <span class="field-hint">Primary applicant's baseline monthly salary.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="CoapplicantIncome">Co-Applicant Income ($)</label>
+                        <input type="number" name="CoapplicantIncome" id="CoapplicantIncome" min="0" placeholder="e.g. 2000" required>
+                        <span class="field-hint">Enter 0 if there is no co-applicant.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Credit_History">Credit History Status</label>
+                        <select name="Credit_History" id="Credit_History" required>
+                            <option value="" disabled selected>Select Credit Status</option>
+                            <option value="1">Good (Defaults Cleared / Credit score > 700)</option>
+                            <option value="0">No Record / Active Loan Defaults</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Loan Details -->
+            <div class="form-fieldset">
+                <legend><i class="fa-solid fa-hand-holding-dollar"></i> Requested Loan Parameters</legend>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="LoanAmount">Requested Loan Amount (in Thousands $)</label>
+                        <input type="number" name="LoanAmount" id="LoanAmount" min="1" placeholder="e.g. 150 for $150,000" required>
+                        <span class="field-hint">Enter 150 to represent $150,000.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Loan_Amount_Term">Loan Term (in Months)</label>
+                        <input type="number" name="Loan_Amount_Term" id="Loan_Amount_Term" min="12" max="480" value="360" required>
+                        <span class="field-hint">Standard length is 360 months (30 years).</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Property_Area">Property Area Location</label>
+                        <select name="Property_Area" id="Property_Area" required>
+                            <option value="" disabled selected>Select Location Type</option>
+                            <option value="Urban">Urban</option>
+                            <option value="Semiurban">Semiurban</option>
+                            <option value="Rural">Rural</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="reset" class="btn btn-secondary"><i class="fa-solid fa-rotate-left"></i> Reset Form</button>
+                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-wand-magic-sparkles"></i> Evaluate Application</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    function fillPreset(presetName) {
+        if (presetName === 'low_risk') {
+            document.getElementById('Gender').value = 'Male';
+            document.getElementById('Married').value = 'Yes';
+            document.getElementById('Dependents').value = '0';
+            document.getElementById('Education').value = 'Graduate';
+            document.getElementById('Self_Employed').value = 'No';
+            document.getElementById('ApplicantIncome').value = 6500;
+            document.getElementById('CoapplicantIncome').value = 2500;
+            document.getElementById('Credit_History').value = '1';
+            document.getElementById('LoanAmount').value = 180;
+            document.getElementById('Loan_Amount_Term').value = 360;
+            document.getElementById('Property_Area').value = 'Semiurban';
+        } else if (presetName === 'high_risk') {
+            document.getElementById('Gender').value = 'Female';
+            document.getElementById('Married').value = 'No';
+            document.getElementById('Dependents').value = '1';
+            document.getElementById('Education').value = 'Not Graduate';
+            document.getElementById('Self_Employed').value = 'Yes';
+            document.getElementById('ApplicantIncome').value = 1800;
+            document.getElementById('CoapplicantIncome').value = 0;
+            document.getElementById('Credit_History').value = '0';
+            document.getElementById('LoanAmount').value = 120;
+            document.getElementById('Loan_Amount_Term').value = 360;
+            document.getElementById('Property_Area').value = 'Rural';
+        } else if (presetName === 'high_loan') {
+            document.getElementById('Gender').value = 'Male';
+            document.getElementById('Married').value = 'Yes';
+            document.getElementById('Dependents').value = '2';
+            document.getElementById('Education').value = 'Graduate';
+            document.getElementById('Self_Employed').value = 'No';
+            document.getElementById('ApplicantIncome').value = 3500;
+            document.getElementById('CoapplicantIncome').value = 500;
+            document.getElementById('Credit_History').value = '1';
+            document.getElementById('LoanAmount').value = 450; // $450k
+            document.getElementById('Loan_Amount_Term').value = 360;
+            document.getElementById('Property_Area').value = 'Urban';
+        }
+    }
+</script>
+{% endblock %}

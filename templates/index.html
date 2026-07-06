@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-content">
+        <span class="badge">Machine Learning Risk Assessment</span>
+        <h1>Accelerate Lending Decisions with <span class="text-gradient">Intelligent Risk Insights</span></h1>
+        <p class="hero-desc">
+            Smart Lender evaluates loan applications in real-time. By leveraging advanced classification models, we identify high-risk applicants instantly, allowing credit officers to approve loans with confidence and precision.
+        </p>
+        <div class="hero-actions">
+            <a href="{{ url_for('predict') }}" class="btn btn-primary btn-lg">
+                <i class="fa-solid fa-square-poll-vertical"></i> Start Predictor
+            </a>
+            <a href="{{ url_for('eda') }}" class="btn btn-secondary btn-lg">
+                <i class="fa-solid fa-chart-bar"></i> Explore EDA
+            </a>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="glass-card main-stats-card">
+            <h3>Best Model Selected</h3>
+            <div class="model-badge">
+                <i class="fa-solid fa-bolt"></i> XGBoost Classifier
+            </div>
+            <div class="metric-group-row">
+                <div class="metric-box">
+                    <span class="metric-num">94.1%</span>
+                    <span class="metric-lbl">Train Accuracy</span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-num">77.2%</span>
+                    <span class="metric-lbl">Test Accuracy</span>
+                </div>
+            </div>
+            <div class="divider"></div>
+            <p class="stats-card-notes"><i class="fa-solid fa-shield-halved"></i> Integrated to predict repayment/default likelihood with over 84% test F1-score.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Overview Scenarios Cards -->
+<section class="section-container">
+    <div class="section-header">
+        <h2>Risk Assessment Scenarios</h2>
+        <p>Explore how bank credit officers and analysts use Smart Lender to optimize evaluating creditworthiness.</p>
+    </div>
+    <div class="card-grid">
+        <div class="scenario-card glass-card">
+            <div class="card-icon icon-success">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+            <h3>1. Fast-Track Approval</h3>
+            <p>Salaried applicants with a strong credit history and stable household income are automatically identified as low-risk, enabling credit officers to fast-track approvals and reduce backlog.</p>
+        </div>
+        <div class="scenario-card glass-card">
+            <div class="card-icon icon-danger">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <h3>2. High-Risk Detection</h3>
+            <p>Self-employed applicants with irregular incomes or lack of credit history are flagged instantly, prompting manual verification before releasing financial assets.</p>
+        </div>
+        <div class="scenario-card glass-card">
+            <div class="card-icon icon-info">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+            <h3>3. Operational Compliance</h3>
+            <p>Financial analysts evaluate high volumes of loan applicants. By utilizing the XGBoost model's predictions, they maintain regulatory compliance and reduce manual assessment times.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Model Comparison Table -->
+<section class="section-container">
+    <div class="section-header">
+        <h2>Classification Algorithms Benchmarking</h2>
+        <p>Performance comparison of trained models evaluating loan applicant data.</p>
+    </div>
+    <div class="table-container glass-card">
+        <table class="benchmark-table">
+            <thead>
+                <tr>
+                    <th>Algorithm</th>
+                    <th>Train Accuracy</th>
+                    <th>Test Accuracy</th>
+                    <th>Precision (Test)</th>
+                    <th>Recall (Test)</th>
+                    <th>F1-Score (Test)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for model_name, metrics in stats.items() %}
+                <tr class="{% if model_name == 'XGBoost' %}highlight-row{% endif %}">
+                    <td class="model-name-cell">
+                        {% if model_name == 'XGBoost' %}<i class="fa-solid fa-award text-gold"></i>{% endif %}
+                        {{ model_name }}
+                    </td>
+                    <td>{{ (metrics.train_accuracy * 100) | round(1) }}%</td>
+                    <td>{{ (metrics.test_accuracy * 100) | round(1) }}%</td>
+                    <td>{{ (metrics.precision * 100) | round(1) }}%</td>
+                    <td>{{ (metrics.recall * 100) | round(1) }}%</td>
+                    <td>{{ (metrics.f1_score * 100) | round(1) }}%</td>
+                    <td>
+                        {% if model_name == 'XGBoost' %}
+                        <span class="status-badge status-active">Active Predictor</span>
+                        {% else %}
+                        <span class="status-badge status-inactive">Evaluated</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

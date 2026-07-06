@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart Lender - Machine Learning Powered Loan Prediction and Evaluation System.">
+    <title>Smart Lender | Loan Eligibility Predictor</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Background glow elements for rich aesthetic depth -->
+    <div class="glow-bg">
+        <div class="glow-sphere sphere-1"></div>
+        <div class="glow-sphere sphere-2"></div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="navbar-container">
+        <nav class="navbar" id="navbar">
+            <a href="{{ url_for('home') }}" class="logo">
+                <i class="fa-solid fa-building-columns"></i>
+                <span>Smart<span class="text-gradient">Lender</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                    <i class="fa-solid fa-house-chimney"></i> Home
+                </a>
+                <a href="{{ url_for('predict') }}" class="nav-link {% if request.path == '/predict' %}active{% endif %}">
+                    <i class="fa-solid fa-chart-line"></i> Predict Eligibility
+                </a>
+                <a href="{{ url_for('eda') }}" class="nav-link {% if request.path == '/eda' %}active{% endif %}">
+                    <i class="fa-solid fa-chart-bar"></i> EDA Insights
+                </a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Flash messages container -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash-alert flash-{{ category }}">
+                            <i class="fa-solid {% if category == 'error' %}fa-circle-xmark{% else %}fa-circle-check{% endif %}"></i>
+                            <span>{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="{{ url_for('home') }}" class="logo">
+                    <i class="fa-solid fa-building-columns"></i>
+                    <span>Smart<span class="text-gradient">Lender</span></span>
+                </a>
+                <p>Empowering banks and financial institutions with predictive risk analytics to accelerate smart lending decisions.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Application</h4>
+                <a href="{{ url_for('home') }}">Overview</a>
+                <a href="{{ url_for('predict') }}">Run Predictions</a>
+                <a href="{{ url_for('eda') }}">EDA Insights</a>
+            </div>
+            <div class="footer-tech">
+                <h4>Technology Stack</h4>
+                <span><i class="fa-brands fa-python"></i> Python</span>
+                <span><i class="fa-solid fa-gears"></i> XGBoost</span>
+                <span><i class="fa-solid fa-server"></i> Flask</span>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Smart Lender Inc. All rights reserved. Powered by Advanced ML & Analytics.</p>
+        </div>
+    </footer>
+
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

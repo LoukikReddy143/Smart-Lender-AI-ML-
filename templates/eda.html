@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section-container">
+    <div class="section-header">
+        <h2>Exploratory Data Analysis Dashboard</h2>
+        <p>Analyze trends, distributions, and feature relationships that drive the creditworthiness evaluation model.</p>
+    </div>
+
+    <!-- EDA Plots Grid -->
+    <div class="eda-grid">
+        <!-- Plot 1: Loan Status -->
+        <div class="glass-card eda-card">
+            <div class="eda-card-header">
+                <h3><i class="fa-solid fa-chart-pie text-gradient"></i> Loan Status Distribution</h3>
+                <span class="eda-tag">Class Balance</span>
+            </div>
+            <div class="eda-plot-container">
+                <img src="{{ url_for('static', filename='images/plots/loan_status_distribution.png') }}" alt="Loan Status Distribution" class="eda-plot-img">
+            </div>
+            <div class="eda-desc">
+                <p>This plot shows the overall balance of loans in the dataset. Approximately 69% of applications in the history are approved, illustrating the baseline distribution of the target class.</p>
+            </div>
+        </div>
+
+        <!-- Plot 2: Credit History -->
+        <div class="glass-card eda-card">
+            <div class="eda-card-header">
+                <h3><i class="fa-solid fa-user-clock text-gradient"></i> Credit History Significance</h3>
+                <span class="eda-tag">Primary Predictor</span>
+            </div>
+            <div class="eda-plot-container">
+                <img src="{{ url_for('static', filename='images/plots/credit_history_vs_status.png') }}" alt="Credit History vs Status" class="eda-plot-img">
+            </div>
+            <div class="eda-desc">
+                <p>Applicants with a "Good" credit history record (1.0) have an extremely high approval rate compared to those with poor or no history (0.0). Credit history is mathematically the most significant coefficient in all classification trees.</p>
+            </div>
+        </div>
+
+        <!-- Plot 3: Income vs Loan Amount -->
+        <div class="glass-card eda-card">
+            <div class="eda-card-header">
+                <h3><i class="fa-solid fa-chart-line text-gradient"></i> Income vs Loan Request</h3>
+                <span class="eda-tag">Distribution & Correlation</span>
+            </div>
+            <div class="eda-plot-container">
+                <img src="{{ url_for('static', filename='images/plots/income_vs_loan.png') }}" alt="Income vs Loan Amount" class="eda-plot-img">
+            </div>
+            <div class="eda-desc">
+                <p>A scatter distribution mapping applicant monthly income against the requested loan amount in thousands. This highlights that while high income often allows for high-value loans, outliers are frequently flagged for manual risk mitigation.</p>
+            </div>
+        </div>
+
+        <!-- Plot 4: Property Area -->
+        <div class="glass-card eda-card">
+            <div class="eda-card-header">
+                <h3><i class="fa-solid fa-map-location-dot text-gradient"></i> Property Area Outcomes</h3>
+                <span class="eda-tag">Demographic Variable</span>
+            </div>
+            <div class="eda-plot-container">
+                <img src="{{ url_for('static', filename='images/plots/property_area_vs_status.png') }}" alt="Property Area vs Status" class="eda-plot-img">
+            </div>
+            <div class="eda-desc">
+                <p>Analysis of loans grouped by Property Area (Rural, Semiurban, Urban). Semiurban properties have a slightly higher likelihood of loan approvals, which could be attributed to lower risk margins or local development incentives.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
