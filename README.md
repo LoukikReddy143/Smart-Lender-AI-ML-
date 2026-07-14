@@ -245,6 +245,7 @@ Example:
 **Your Name**
 
 GitHub: https://github.com/LoukikReddy143
+
 LinkedIn: www.linkedin.com/in/b-loukik-kumar-reddy-77482a332
 
 ---
