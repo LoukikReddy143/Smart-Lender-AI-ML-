@@ -4,12 +4,6 @@ A modern Machine Learning web application that predicts whether a loan applicati
 
 ---
 
-## 🌐 Live Demo
-
-**Coming Soon**
-
----
-
 ## 📖 Project Overview
 
 Smart Lender is designed to assist financial institutions in evaluating loan applications efficiently by leveraging Machine Learning algorithms. The application analyzes applicant information such as income, loan amount, employment status, education, and credit history to predict loan approval.
@@ -55,12 +49,6 @@ The project combines a user-friendly Flask web application with powerful machine
 - Matplotlib
 - Seaborn
 
-### Development Tools
-- Git
-- GitHub
-- VS Code
-
----
 
 ## 📂 Project Structure
 
